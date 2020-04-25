@@ -1,20 +1,22 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 import pandas as pd
 import random
+import csv
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 def main():
     file_path = './class_map_corrected.csv'
     df = pd.read_csv(file_path)
-    # root: 168
+    root: 168
     roots = df.loc[0:167].loc[:, 'component'].values.tolist()
-    # vowel: 11
+    vowel: 11
     vowels = df.loc[168:178].loc[:, 'component'].values.tolist()
-    # consonant: 7
+    consonant: 7
     consonants = df.loc[179:].loc[:, 'component'].values.tolist()
     # print(roots)
     # print(consonants)
@@ -26,6 +28,21 @@ def main():
                 text = gen_grapheme(root, vowel, consonant, roots, vowels, consonants)
                 trace(text, i)
                 i = i + 1
+
+
+    # for root in range(0, 2):
+    #     for vowel in range(0, 2):
+    #         for consonant in range(0, 4):
+    #             # text = gen_grapheme(root, vowel, consonant, roots, vowels, consonants)
+    #             text = gen_grapheme(153, 3, 0, roots, vowels, consonants)
+    #             trace(text, i)
+    #             print(root, vowel, consonant, text)
+    #             i = i + 1
+
+    # mylist = [text]
+    # with open('./testbangla.csv', 'a+', newline='', encoding='utf-8') as myfile:
+    #     wr = csv.writer(myfile)
+    #     wr.writerow(mylist)
 
     # i = 2
     # root = 14
@@ -68,11 +85,12 @@ def gen_grapheme(root, vowel, consonant, roots, vowels, consonants):
             return roots[root] + consonants[consonant]
         else:
             return roots[root] + consonants[consonant] + vowels[vowel]
-    elif consonant == 6:
+    elif consonant == 7:
         if vowel == 0:
             return consonants[2] + roots[root] + consonants[2][::-1]
         else:
             return consonants[2] + roots[root] + consonants[2][::-1] + vowels[vowel]
+
 
 
 def trace(text, i):
@@ -83,10 +101,18 @@ def trace(text, i):
     font = ImageFont.truetype("./kalpurush.ttf", 30, layout_engine=ImageFont.LAYOUT_RAQM)
     textsize = draw.textsize(text, font=font)
     # text = "অ"
-    location = (imgsize - textsize[1]) / 2
-    draw.text((location, imgsize / 2 - 10), text, (0, 0, 0), font=font)
+
+    # the [] is important!
+    mylist = [text]
+    print(mylist)
+    with open('./testbangla.csv', 'a+', newline='', encoding='utf-8') as myfile:
+        wr = csv.writer(myfile)
+        wr.writerow(mylist)
+
+    # location = (imgsize - textsize[1]) / 2
+    # draw.text((location, imgsize / 2 - 10), text, (0, 0, 0), font=font)
     # img.save('./traceImg/' + str(i) + '.png')
-    img.save('./' + str(i) + '.png')
+    # img.save('./testgrapheme/' + str(i) + '.png')
     return
 
 
